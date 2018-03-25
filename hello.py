@@ -1,10 +1,8 @@
-def application(env, start_response):
-    body = [p for p in env['QUERY_STRING'].split('&')]
-    body = '\n'.join(body)
+def application(environ, start_response):
     status = '200 OK'
-    response_headers = [('Content-Type', 'text/plain'),
-                        ('Content-Length', str(len(body)))
+    headers = [
+        ('Content-type', 'text/plain')
     ]
-
-    start_response(status, response_headers)
-    return [ body ]
+    data = environ.get('QUERY_STRING').replace('&', '\n')
+    start_response(status, headers)
+    return [bytes(data, 'utf-8')]
